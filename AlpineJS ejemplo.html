@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Document</title>
 
-		<!-- incluro el CDN -->
+		<!-- incluyo el CDN -->
 		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 		<!-- para produccion fijar la version
 		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
@@ -19,15 +19,16 @@
 	</head>
 	<body>
 
-	<!-- 	<div x-data="{ open: true}">	/* inicializo bloque de AlpineJS y defino variable*/
 
-			<button x-bind:disabled="open" x-on:click="open = !open">
-				Menu
+	<div x-data="{ open1: true}">	<!-- inicializo bloque de AlpineJS y defino variable -->
+
+			<button x-bind:disabled="open1" x-on:click="open1 = !open1">
+				Menu1
 			</button>
 
-			<nav x-show="open" x-on:click.away="open = false">
-			/* lo mismo pero con el modificado de atributos x-bind. La clase 'hidden' se saca o no dependiendo del valor de 'open' */
-			<nav class="hidden" x-bind:class="{'hidden' : !open}" x-on:click.away="open = false">
+			<nav x-show="open1" x-on:click.away="open1 = false">
+			<!-- lo mismo pero con el modificado de atributos x-bind. La clase 'hidden' se saca o no dependiendo del valor de 'open' -->
+			<!-- <nav class="hidden" x-bind:class="{'hidden' : !open1}" x-on:click.away="open1 = false"> -->
 				<ul>
 					<li>Item 1</li>
 					<li>Item 2</li>
@@ -36,8 +37,9 @@
 				</ul>
 				
 			</nav>
-		</div> -->
+		</div>
 
+		<br><br>
 
 <!-- x-bind: es equivalente a poner : -->
 <!-- x-on: es equivalente a poner @ -->
@@ -51,7 +53,7 @@
 			<!-- x-bind: para cambiar atributos. en este caso deshabilita el boton con el valor de 'open' -->
 			<!-- <button x-bind:disabled="open" x-on:click="isOpen()"> -->		<!-- invoco a la funcion isOpen() -->
 			<button :disabled="open" @click="isOpen()">
-				Menu
+				Menu2
 			</button>
 
 			<!-- <nav x-show="open" x-on:click.away="close()"> -->		<!-- invoco a la funcion close() -->
@@ -59,10 +61,10 @@
 			<!-- <nav class="hidden" x-bind:class="{'hidden' : !open}" x-on:click.away="close()"> -->
 			<nav class="hidden" :class="{'hidden' : !open}" @click.away="close()">
 				<ul>
-					<li>Item 1</li>
-					<li>Item 2</li>
-					<li>Item 3</li>
-					<li>Item 4</li>
+					<li>Item A</li>
+					<li>Item B</li>
+					<li>Item C</li>
+					<li>Item D</li>
 				</ul>
 				
 			</nav>
@@ -84,6 +86,22 @@
 				}
 			}
 		</script>
+
+		<br><br>
+
+		<div x-data="{mensaje: null}">			<!-- inicializo bloque de AlpineJS y defino variable -->
+
+			<label>Ingrese texto</label>
+			<input type="text" x-model="mensaje">	<!-- linkeo el input a la vble 'mensaje' -->
+			<p x-text="mensaje"></p>		<!-- muestro dinamicamente la vble 'mensaje' -->
+			<br>
+
+			<!-- evento click que asigna la vble 'mensaje' al x-ref='msj' -->
+			<button @click="$refs.msj.innerText=mensaje">Enviar</button>
+			<p x-ref="msj"></p>		<!-- referencio a 'msj' -->
+
+		</div>
+
 		
 	</body>
 </html>
