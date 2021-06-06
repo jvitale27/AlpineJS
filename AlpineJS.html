@@ -1,0 +1,272 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+
+		<!-- incluyo el CDN -->
+		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+		<!-- para produccion fijar la version
+		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
+		 -->
+		
+		<style>
+			.hidden{				/*defino clase para ocultar cosas*/
+				display: none;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+<!-- MENU DESPLEGABLE SIMPLE -->
+	MENU DESPLEGABLE SIMPLE  x-bind x-on:click x-show
+	<div x-data="{ open1: false}">	<!-- inicializo bloque de AlpineJS y defino variable -->
+
+			<button x-bind:disabled="open1" x-on:click="open1 = !open1">
+				Menu1
+			</button>
+
+			<nav x-show="open1" x-on:click.away="open1 = false">
+			<!-- lo mismo pero con el modificado de atributos x-bind:class. La clase 'hidden' se saca o no dependiendo del valor de 'open' -->
+			<!-- <nav class="hidden" x-bind:class="{'hidden' : !open1}" x-on:click.away="open1 = false"> -->
+				<ul>
+					<li>Item 1</li>
+					<li>Item 2</li>
+					<li>Item 3</li>
+					<li>Item 4</li>
+				</ul>
+				
+			</nav>
+		</div>
+
+		<br><br>
+
+
+<!-- MENU DESPLEGABLE MEDIANTE METODOS EN SCRIPT -->
+
+<!-- x-bind: es equivalente a poner : -->
+<!-- x-on: es equivalente a poner @ -->
+
+	MENU DESPLEGABLE MEDIANTE METODOS EN SCRIPT data() x-bind:(:) x-on:(@) class
+
+		<!-- invoco a la funcion data(), x-init es como el metodo mount que ejecuta esa funcion al inicio -->
+		<div x-data="data()" x-init="start()">		<!-- /* inicializo bloque de AlpineJS y funcion inicial*/ -->
+		
+			<!-- x-bind: para cambiar atributos. en este caso deshabilita el boton con el valor de 'open' -->
+			<!-- <button x-bind:disabled="open" x-on:click="isOpen()"> -->		<!-- invoco a la funcion isOpen() -->
+			<button :disabled="open" @click="isOpen()">
+				Menu2
+			</button>
+
+			<!-- <nav x-show="open" x-on:click.away="close()"> -->		<!-- invoco a la funcion close() -->
+			<!-- lo mismo pero con el modificado de atributos x-bind. La clase 'hidden' se saca o no dependiendo del valor de 'open' -->
+			<!-- <nav class="hidden" x-bind:class="{'hidden' : !open}" x-on:click.away="close()"> -->
+			<nav class="hidden" :class="{'hidden' : !open}" @click.away="close()">
+				<ul>
+					<li>Item A</li>
+					<li>Item B</li>
+					<li>Item C</li>
+					<li>Item D</li>
+				</ul>
+				
+			</nav>
+		</div>
+
+		<script type="text/javascript">
+			function data(){
+				return {
+					open: true,				//referencio la vble directamente. La inicializo en start() con x-init
+					start(){						//si la invoco desde un x-init funciona como un mount
+						this.open = false
+					},
+					isOpen(){
+						this.open = !this.open 		//referencio con this. por estar dentro de un metodo
+					},
+					close(){
+						this.open = false 			//referencio con this. por estar dentro de un metodo
+					}
+				}
+			}
+		</script>
+
+<!-- SINCRONIZAR y LINKEAR -->
+<br><br>SINCRONIZAR y LINKEAR x-model x-text x-ref<br><br>
+
+		<div x-data="{mensaje: null}">			<!-- inicializo bloque de AlpineJS y defino variable -->
+
+			<label>Ingrese texto</label>
+			<input type="text" x-model="mensaje">	<!-- linkeo el input a la vble 'mensaje' -->
+			<p x-text="mensaje"></p>		<!-- muestro dinamicamente la vble 'mensaje' -->
+
+			<!-- evento click que asigna la vble 'mensaje' al x-ref='msj' -->
+			<button @click="$refs.msj.innerText=mensaje">Enviar</button>
+			<p x-ref="msj"></p>		<!-- referencio a 'msj' -->
+
+		</div>
+
+
+<!-- ITERACCIONES Y CONDICIONALES -->
+<br><br>ITERACCIONES Y CONDICIONALES x-for x-if<br>
+
+		<div x-data="data1()">		<!-- /* inicializo bloque de AlpineJS y funcion inicial*/ -->
+
+			<ul> Arreglos
+				<!-- itero un ARRAY, product dentro de products
+					Siempre debo utilizar la etiqueta 'template' -->
+				<template x-for="product in products"> 
+					<li>
+						<span x-text="product.stock"></span> -		<!-- muestro la vble iterada -->
+						<span x-text="product.name"></span>	<!-- muestro la vble iterada -->
+
+						<template x-if="product.stock == 0">
+							<span>(Sin stock)</span>			<!-- nunca texto solo , siempre entre etiquetas -->
+						</template>
+					</li>	
+					
+				</template>
+			</ul>
+
+			<ul> Objetos
+				<!-- itero OBJETOS, product dentro de products
+					Siempre debo utilizar la etiqueta 'template' -->
+				<template x-for="product in Object.values(productsobj)"> 
+
+					<li>
+						<span x-text="product.stock"></span> -	<!-- muestro la vble iterada -->
+						<span x-text="product.name"></span>		<!-- muestro la vble iterada -->
+
+						<template x-if="product.stock == 0">
+							<span>(Sin stock)</span>			<!-- nunca texto solo , siempre entre etiquetas -->
+						</template>
+					</li>	
+					
+				</template>
+			</ul>
+
+		</div>
+
+
+<!-- products es en forma de array, productsobj es en forma de objetos -->
+
+		<script type="text/javascript">
+			function data1(){
+				return {
+					products: [
+						{
+							id: 1,
+							name: 'Pantalon',
+							stock: 50
+						},
+						{	
+							id: 2,
+							name: 'Camisa',
+							stock: 45
+						},	
+						{
+							id: 3,
+							name: 'Casaca',
+							stock: 25
+						},
+						{
+							id: 4,
+							name: 'Zapatilla',
+							stock: 0
+						}
+					],
+					productsobj: {
+						1: {
+							id: 1,
+							name: 'Pantalon2',
+							stock: 0
+						},
+						2: {	
+							id: 2,
+							name: 'Camisa2',
+							stock: 45
+						},	
+						3: {
+							id: 3,
+							name: 'Casaca2',
+							stock: 25
+						},
+						4: {
+							id: 4,
+							name: 'Zapatilla2',
+							stock: 0
+						}
+					}
+				}
+			}
+
+			// function data2(){
+			// 	return {
+			// 		productsobj: {
+			// 			1: {
+			// 				id: 1,
+			// 				name: 'Pantalon2',
+			// 				stock: 50
+			// 			},
+			// 			2: {	
+			// 				id: 2,
+			// 				name: 'Camisa2',
+			// 				stock: 45
+			// 			},	
+			// 			3: {
+			// 				id: 3,
+			// 				name: 'Casaca2',
+			// 				stock: 25
+			// 			},
+			// 			4: {
+			// 				id: 4,
+			// 				name: 'Zapatilla2',
+			// 				stock: 59
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+		</script>
+
+
+<!-- EVENTOS -->
+		EVENTOS @clic @submit @keydown
+		<br>
+		<div x-data>			<!-- inicializo bloque de AlpineJS -->
+			<!-- <button x-on:click="console.log('Hola Mundo')"> -->
+			<button @click="console.log('Hola Mundo')">				<!-- es lo mismo x-on: que @ -->
+				Presioname
+			</button>
+		</div>
+		<br>
+
+		<div x-data="{ mensaje: null, mensaje1 : null}">			<!-- inicializo bloque de AlpineJS y vbles -->
+			<!-- @submit utilizado para enviar formularios. El 'prevent' evita que se envie el formulario, de
+			otra forma no veriamos el mensaje en consolo porque el envio de formulario luego refresca la pagina -->
+			<form action="" @submit.prevent="console.log(mensaje)">
+				<input type="text" x-model="mensaje">			<!-- vinculo campo de texto con 'mensaje' -->
+				
+				<!-- este boton cumple las dos funcionaes, enviar el form. si hacemos click en el y avisar con el mensaje
+				si hacemos click fuera de el -->
+				<!-- <button @click.away="console.log('HAs hecho click afuera del boton')"> -->
+				<button>
+					Enviar formulario
+				</button>
+			</form>
+			<br>
+
+			<!-- @keydown dispara el evento cada vez que presionamos una tecla  -->
+			<input type="text" x-model="mensaje1" @keydown="console.log(mensaje1)">tecla 
+			<!-- @keydown.{tecla} dispara el evento cada vez que presionamos esa tecla  -->
+			<input type="text" x-model="mensaje1" @keydown.enter="console.log(mensaje1)">enter 
+			<input type="text" x-model="mensaje1" @keydown.escape="console.log(mensaje1)">escape 
+			<input type="text" x-model="mensaje1" @keydown.arrow-down="console.log(mensaje1)">flecha abajo 
+			<input type="text" x-model="mensaje1" @keydown.ctrl.alt.a="console.log(mensaje1)">ctrl+alt+a 
+
+		</div>
+
+	</body>
+
+
+</html>
