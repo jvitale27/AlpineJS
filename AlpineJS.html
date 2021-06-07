@@ -230,8 +230,9 @@
 		</script>
 
 
-<!-- EVENTOS -->
-		EVENTOS @clic @submit @keydown
+<!-- EVENTOS y METODOS MAGICOS-->
+		EVENTOS y METODOS MAGICOS @click @submit @keydown @input event
+		PONER LA VISTA DE LA CONSOLA PAR VER LOS RESULTADOS
 		<br>
 		<div x-data>			<!-- inicializo bloque de AlpineJS -->
 			<!-- <button x-on:click="console.log('Hola Mundo')"> -->
@@ -264,7 +265,49 @@
 			<input type="text" x-model="mensaje1" @keydown.arrow-down="console.log(mensaje1)">flecha abajo 
 			<input type="text" x-model="mensaje1" @keydown.ctrl.alt.a="console.log(mensaje1)">ctrl+alt+a 
 
+			<!-- capturo el evento @input de cambio de texto (como el @keydown) pero sin retraso-->
+			<input type="text" x-model="mensaje1" @input="console.log($event.target.value)">sin retraso
+			<!-- <input type="text" @input="console.log($event.target.value)"> -->
+
+			<!-- $el hace referencia al propio tag(etiqueta). En este caso cambia el texto del boton. No me
+			gusto lo que hace el innerHTML, desaparece todo -->
+			<div>
+				<button @click="$el.innerHTML='Texto Cambiado'">
+					Presioname y cambio mi textfo. No SIRVE
+				</button>
+			</div>
+			<div>
+				<!-- $refs hace referencia al tag(etiqueta) que tiene x-ref. Cambia el texto del boton -->
+				<button @click="$refs.minombre.innerText='Texto Cambiado'">				<!-- es lo mismo x-on: que @ -->
+					Presioname y cambio su texto
+				</button>
+
+				<span x-ref="minombre">Un texto que cambiara</span>
+			</div>
+
 		</div>
+
+
+
+<br><br>
+<!-- COMUNICACION ENTRE COMPONENTES -->
+		COMUNICACION ENTRE COMPONENTES $dispatch @evento.window
+		<br>
+		<div x-data="{ mensaje: null}">
+
+			<!-- disparo un evento 'mi-evento' a la ventana del navegados (window) con el contenido del mensaje -->
+			<input type="text" x-model="mensaje" @input="$dispatch('mi-evento', mensaje)">
+
+		</div>
+
+		<!-- escucho el evento 'mi-evento' y asigno vble al valor pasado -->
+		<div x-data="{ mensaje1: null}" @mi-evento.window="mensaje1 = $event.detail">
+
+			<input type="text" x-model="mensaje1">
+
+		</div>
+
+		<br>
 
 	</body>
 
